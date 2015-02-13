@@ -12,12 +12,20 @@ class Shop extends Model {
         return $this->belongsTo('App\User');
     }
 
+    public function items() {
+        return $this->hasMany('App\Items');
+    }
+
+    public function orders() {
+        return $this->hasMany('App\Order');
+    }
+
     public function scopePopular($query) {
-        return $query->orderBy('favourite_count', 'desc');
+        return $query->with('user')->orderBy('favourite_count', 'desc');
     }
 
     public function scopeRecent($query) {
-        return $query->orderBy('created_at', 'desc');
+        return $query->with('user')->orderBy('created_at', 'desc');
     }
 
 }

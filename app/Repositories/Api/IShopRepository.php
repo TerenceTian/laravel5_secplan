@@ -12,6 +12,8 @@ interface IShopRepository
 
     public function getShopById($id);
 
+    public function getItemsInShop($id);
+
     public function createOrUpdate($data, $id = null);
 
     public function destroy($id);

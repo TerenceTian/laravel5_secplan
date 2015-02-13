@@ -19,14 +19,6 @@ class ShopsController extends Controller
         $this->middleware('manager', ['only' => ['edit', 'update', 'destroy']]);
     }
 
-    public function RedirectIfNotOwner($id) {
-        if ($id == Auth::user()->id) {
-            return true;
-        }
-
-        return abort(403, '没有权限');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +27,7 @@ class ShopsController extends Controller
     public function index() {
         $shops = $this->shop->getAllShops();
 
-        return View('shops.index', compact('shops'));
+        return view('shops.index', compact('shops'));
     }
 
     /**
@@ -44,7 +36,7 @@ class ShopsController extends Controller
      * @return Response
      */
     public function create() {
-        return View('shops.create_edit');
+        return view('shops.create_edit');
     }
 
     /**
@@ -70,8 +62,9 @@ class ShopsController extends Controller
      */
     public function show($id) {
         $shop = $this->shop->getShopById($id);
+        $items = $this->shop->getItemsInShop($id);
 
-        return View('shops.show', compact('shop'));
+        return view('shops.show', compact('shop', 'items'));
     }
 
     /**
@@ -81,11 +74,10 @@ class ShopsController extends Controller
      * @return Response
      */
     public function edit($id) {
-        $this->RedirectIfNotOwner($id);
-
         $shop = $this->shop->getShopById($id);
+        $this->RedirectIfNotOwner($shop->user_id);
 
-        return View('shops.create_edit', compact('shop'));
+        return view('shops.create_edit', compact('shop'));
     }
 
     /**
@@ -96,9 +88,10 @@ class ShopsController extends Controller
      * @return Response
      */
     public function update($id, CreateShopsRequest $request) {
-        $this->RedirectIfNotOwner($id);
-
         $data = $request->all();
+        $shop = $this->shop->getShopById($id);
+        $this->RedirectIfNotOwner($shop->user_id);
+
         //$data['user_id'] = Auth::user()->id;
         $data = $this->purifier->clean($data);
         $this->shop->createOrUpdate($data, $id);
@@ -113,7 +106,8 @@ class ShopsController extends Controller
      * @return Response
      */
     public function destroy($id) {
-        $this->RedirectIfNotOwner($id);
+        $shop = $this->shop->getShopById($id);
+        $this->RedirectIfNotOwner($shop->user_id);
 
         $this->shop->destroy($id);
 

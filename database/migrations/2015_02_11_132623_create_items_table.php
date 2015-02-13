@@ -32,7 +32,7 @@ class CreateItemsTable extends Migration {
 			$table->foreign('shop_id')
 				->references('id')
 				->on('shops')
-				->onDelete('cascade');
+				->onDelete('cascade')->onUpdate('cascade');
 		});
 	}
 

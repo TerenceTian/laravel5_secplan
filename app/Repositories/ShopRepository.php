@@ -19,7 +19,7 @@ class ShopRepository implements IShopRepository
     }
 
     public function getAllShops() {
-        $shops = Shop::all();
+        $shops = Shop::with('user')->get();
 
         return $shops;
     }
@@ -35,13 +35,20 @@ class ShopRepository implements IShopRepository
         if (is_null($id)) {
             return Shop::create($data);
         } else {
-            $shop = Shop::find($id);
+            $shop = Shop::findOrFail($id);
             return $shop->update($data);
         }
     }
 
     public function destroy($id) {
-        $post = Shop::findOrFail($id);
-        return $post->delete();
+        $shop = Shop::findOrFail($id);
+
+        return $shop->delete();
+    }
+
+    public function getItemsInShop($id) {
+        $itemRepo = new ItemRepository();
+
+        return $itemRepo->getItemsByShopId($id);
     }
 }

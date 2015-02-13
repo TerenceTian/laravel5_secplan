@@ -21,6 +21,8 @@ Route::controllers([
 ]);
 
 
-Route::resource('shops','ShopsController');
+Route::resource('shops', 'ShopsController');
+
+Route::resource('items', 'ItemsController');
 
 Route::get('about', 'PagesController@about');
