@@ -145,10 +145,10 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
+        'App\Providers\RepositoryServiceProvider',
 
 		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 		'Zizaco\Entrust\EntrustServiceProvider',
-		'App\Providers\RepositoryServiceProvider',
 		'Chromabits\Purifier\PurifierServiceProvider',
 
 	],

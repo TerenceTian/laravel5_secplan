@@ -13,7 +13,8 @@ class RepositoryServiceProvider extends ServiceProvider
      * @return void
      */
     public function register() {
-        $this->app->bind('Repositories\\Api\\IShopRepository', 'Repositories\\ShopRepository');
-        $this->app->bind('Repositories\\Api\\IItemRepository', 'Repositories\\ItemRepository');
+        $this->app->bind('App\\Repositories\\Api\\IShopRepository', 'App\\Repositories\\ShopRepository');
+        $this->app->bind('App\\Repositories\\Api\\IItemRepository', 'App\\Repositories\\ItemRepository');
+        $this->app->bind('App\\Repositories\\Api\\IOrderRepository', 'App\\Repositories\\OrderRepository');
     }
 }

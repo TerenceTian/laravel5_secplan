@@ -2,9 +2,10 @@
 
 use App\Http\Requests;
 
-use App\Http\Requests\CreateItemsRequest;
+use App\Http\Requests\ItemsFormRequest;
+use App\Item;
+use App\Repositories\Api\IItemRepository;
 use Chromabits\Purifier\Contracts\Purifier;
-use Repositories\Api\IItemRepository;
 
 class ItemsController extends Controller {
 
@@ -40,16 +41,16 @@ class ItemsController extends Controller {
 		return view('items.create_edit');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param CreateItemsRequest $request
-	 * @return Response
-	 */
-	public function store(CreateItemsRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param ItemsFormRequest $request
+     * @return Response
+     */
+	public function store(ItemsFormRequest $request)
 	{
 		$data = $request->all();
-		$data['shop_id'] = 4;
+		$data['shop_id'] = 1;
 		$data['geo_id'] = 1;
 		$data['amount'] = 1;
 		$data['original_price'] = 1;
@@ -63,65 +64,54 @@ class ItemsController extends Controller {
 		return redirect()->route('items.show', $item->id);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
+    /**
+     * Display the specified resource.
+     *
+     * @param Item $item
+     * @return Response
+     */
+	public function show(Item $item)
 	{
-		$item = $this->item->getItemById($id);
-
 		return view('items.show', compact('item'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param ItemsFormRequest $request
+     * @param Item $item
+     * @return Response
+     */
+	public function edit(ItemsFormRequest $request, Item $item)
 	{
-		$item = $this->item->getItemById($id);
-		$this->RedirectIfNotOwner($item->shop->user_id);
-
-		return view('items.create_edit');
+		return view('items.create_edit', compact('item'));
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int $id
-	 * @param CreateItemsRequest $request
-	 * @return Response
-	 */
-	public function update($id, CreateItemsRequest $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Item $item
+     * @param ItemsFormRequest $request
+     * @return Response
+     */
+	public function update(Item $item,ItemsFormRequest $request)
 	{
 		$data = $request->all();
-		$item = $this->item->getItemById($id);
-		$this->RedirectIfNotOwner($item->shop->user_id);
-
 		$data = $this->purifier->clean($data);
+		$this->item->createOrUpdate($data, $item->id);
 
-		$this->item->createOrUpdate($data, $id);
-
-		return redirect()->route('items.show', $id);
+		return redirect()->route('items.show', $item->id);
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Item $item
+     * @return Response
+     */
+	public function destroy(Item $item)
 	{
-		$item  = $this->item->getItemById($id);
-		$this->RedirectIfNotOwner($item->shop->user_id);
-
-		$this->item->destroy($id);
+		$this->item->destroy($item->id);
 
 		return redirect()->route('items.index');
 	}

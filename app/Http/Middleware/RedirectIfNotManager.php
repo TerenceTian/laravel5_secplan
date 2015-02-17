@@ -14,7 +14,7 @@ class RedirectIfNotManager {
 	public function handle($request, Closure $next)
 	{
 		if (! $request->user()->can('manage_shops')) {
-			return abort(403, '没有权限');
+			return redirect()->back()->with('没有权限');
 		}
 
 		return $next($request);

@@ -1,8 +1,9 @@
 <?php
-namespace Repositories;
+namespace App\Repositories;
 
+use App\Repositories\Api\IShopRepository;
 use App\Shop;
-use Repositories\Api\IShopRepository;
+use Auth;
 
 class ShopRepository implements IShopRepository
 {
@@ -31,19 +32,18 @@ class ShopRepository implements IShopRepository
     }
 
 
-    public function createOrUpdate($data, $id = null) {
-        if (is_null($id)) {
+    public function createOrUpdate($data, $shop_id=null) {
+        if (is_null($shop_id)) {
+            $data['user_id'] = Auth::id();
             return Shop::create($data);
         } else {
-            $shop = Shop::findOrFail($id);
-            return $shop->update($data);
+            return Shop::findOrFail($shop_id)->update($data);
         }
     }
 
     public function destroy($id) {
-        $shop = Shop::findOrFail($id);
 
-        return $shop->delete();
+        return Shop::find($id)->delete();
     }
 
     public function getItemsInShop($id) {

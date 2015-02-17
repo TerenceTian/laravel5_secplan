@@ -10,7 +10,7 @@ abstract class Controller extends BaseController {
 	use DispatchesCommands, ValidatesRequests;
 
 	public function RedirectIfNotOwner($id) {
-		if ($id == Auth::user()->id) {
+		if ($id == Auth::id()) {
 			return true;
 		}
 

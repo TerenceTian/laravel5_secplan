@@ -1,9 +1,9 @@
 <?php
 
-namespace Repositories;
+namespace App\Repositories;
 
 use App\Item;
-use Repositories\Api\IItemRepository;
+use App\Repositories\Api\IItemRepository;
 
 class ItemRepository implements  IItemRepository
 {

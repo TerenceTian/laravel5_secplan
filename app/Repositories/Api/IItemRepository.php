@@ -1,6 +1,6 @@
 <?php
 
-namespace Repositories\Api;
+namespace App\Repositories\Api;
 
 interface IItemRepository
 {

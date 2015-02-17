@@ -8,12 +8,14 @@ class Item extends Model {
 
 	protected $guarded = ['id'];
 
+    //protected $touches = ['orders'];
+
 	public function shop() {
 		return $this->belongsTo('App\Shop');
 	}
 
 	public function orders() {
-		return $this->hasMany('App\OrderItems');
+		return $this->belongsToMany('App\Order')->withTimestamps();
 	}
 
 	public function scopePopular($query) {

@@ -3,10 +3,10 @@
 use App\Http\Requests;
 
 use App\Permission;
+use App\Repositories\Api\IShopRepository;
 use App\Role;
 use App\ShopRepository;
 use App\User;
-use Repositories\Api\IShopRepository;
 
 class PagesController extends Controller {
 

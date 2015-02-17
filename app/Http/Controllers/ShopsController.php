@@ -2,10 +2,10 @@
 
 use App\Http\Requests;
 
-use App\Http\Requests\CreateShopsRequest;
+use App\Http\Requests\ShopsFormRequest;
+use App\Repositories\Api\IShopRepository;
+use App\Shop;
 use Chromabits\Purifier\Contracts\Purifier;
-use Repositories\Api\IShopRepository;
-use Auth;
 
 class ShopsController extends Controller
 {
@@ -16,7 +16,7 @@ class ShopsController extends Controller
         $this->purifier = $purifier;
 
         $this->middleware('auth', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
-        $this->middleware('manager', ['only' => ['edit', 'update', 'destroy']]);
+        $this->middleware('manager', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
     }
 
     /**
@@ -42,12 +42,11 @@ class ShopsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param CreateShopsRequest $request
+     * @param ShopsFormRequest $request
      * @return Response
      */
-    public function store(CreateShopsRequest $request) {
+    public function store(ShopsFormRequest $request) {
         $data = $request->all();
-        $data['user_id'] = Auth::user()->id;
         $data = $this->purifier->clean($data);
         $shop = $this->shop->createOrUpdate($data);
 
@@ -57,12 +56,11 @@ class ShopsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Shop $shop
      * @return Response
      */
-    public function show($id) {
-        $shop = $this->shop->getShopById($id);
-        $items = $this->shop->getItemsInShop($id);
+    public function show(Shop $shop) {
+        $items = $this->shop->getItemsInShop($shop->id);
 
         return view('shops.show', compact('shop', 'items'));
     }
@@ -70,12 +68,11 @@ class ShopsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param ShopsFormRequest $request
+     * @param Shop $shop
      * @return Response
      */
-    public function edit($id) {
-        $shop = $this->shop->getShopById($id);
-        $this->RedirectIfNotOwner($shop->user_id);
+    public function edit(ShopsFormRequest $request, Shop $shop) {
 
         return view('shops.create_edit', compact('shop'));
     }
@@ -83,33 +80,28 @@ class ShopsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
-     * @param CreateShopsRequest $request
+     * @param Shop $shop
+     * @param ShopsFormRequest $request
      * @return Response
      */
-    public function update($id, CreateShopsRequest $request) {
+    public function update(Shop $shop, ShopsFormRequest $request) {
         $data = $request->all();
-        $shop = $this->shop->getShopById($id);
-        $this->RedirectIfNotOwner($shop->user_id);
 
-        //$data['user_id'] = Auth::user()->id;
         $data = $this->purifier->clean($data);
-        $this->shop->createOrUpdate($data, $id);
+        $this->shop->createOrUpdate($data, $shop->id);
 
-        return redirect()->route('shops.show', $id);
+        return redirect()->route('shops.show', $shop->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param ShopsFormRequest $request
+     * @param Shop $shop
      * @return Response
      */
-    public function destroy($id) {
-        $shop = $this->shop->getShopById($id);
-        $this->RedirectIfNotOwner($shop->user_id);
-
-        $this->shop->destroy($id);
+    public function destroy(ShopsFormRequest $request, Shop $shop) {
+        $this->shop->destroy($shop->id);
 
         return redirect()->route('shops.index');
     }

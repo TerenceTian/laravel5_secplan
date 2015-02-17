@@ -22,8 +22,17 @@ class CreateOrdersTable extends Migration {
 			$table->string('address');
 			$table->integer('situation')->default(0);
 			$table->integer('post_price')->default(0);
-
 			$table->timestamps();
+
+            $table->foreign('shop_id')
+                ->references('id')
+                ->on('shops')
+                ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('buyer_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')->onUpdate('cascade');
 		});
 	}
 

@@ -25,4 +25,7 @@ Route::resource('shops', 'ShopsController');
 
 Route::resource('items', 'ItemsController');
 
+Route::resource('orders', 'OrdersController');
+Route::post('orders/{orders}/remove_item', 'OrdersController@removeItem');
+
 Route::get('about', 'PagesController@about');
