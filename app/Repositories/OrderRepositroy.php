@@ -25,36 +25,36 @@ class OrderRepository implements IOrderRepository {
         return $orders;
     }
 
-    public function createOrUpdate($data, $id=null) {
-        if ( ! is_null($id)) {
+    public function createOrUpdate($data, Order $order=null) {
+        if ( ! is_null($order)) {
             return Order::create($data);
         } else {
-            return $this->getOrderById($id)->update($data);
+            return $order->update($data);
         }
     }
 
-    public function addItemToOrder($order_id, $item_id) {
-        $order = $this->getOrderById($order_id);
+    //public function addItemToOrder($order_id, $item_id) {
+    //    $order = $this->getOrderById($order_id);
+    //
+    //    $order->items->attach($item_id);
+    //
+    //    return $order->items;
+    //}
 
-        $order->items->attach($item_id);
-
-        return $order->items;
-    }
-
-    public function addItemsToOrder($order_id, $items_id_array) {
-        $order = $this->getOrderById($order_id);
+    public function updateItemsToOrder(Order $order, array $items_id_array) {
+        //$order = $this->getOrderById($order_id);
 
         return $order->items()->sync($items_id_array);
     }
 
-    public function removeItemFromOrder($order_id, $item_id) {
-        $order = $this->getOrderById($order_id);
+    //public function removeItemsFromOrder($order_id, $item_id) {
+    //    $order = $this->getOrderById($order_id);
+    //
+    //    return $order->items()->detach($item_id);
+    //}
 
-        return $order->items()->detach($item_id);
-    }
-
-    public function destroyOrder($id) {
-        $order = $this->getOrderById($id);
+    public function destroyOrder(Order $order) {
+        //$order = $this->getOrderById($id);
 
         return $order->delete();
     }

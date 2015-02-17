@@ -32,23 +32,22 @@ class ShopRepository implements IShopRepository
     }
 
 
-    public function createOrUpdate($data, $shop_id=null) {
-        if (is_null($shop_id)) {
+    public function createOrUpdate($data, Shop $shop=null) {
+        if (is_null($shop)) {
             $data['user_id'] = Auth::id();
             return Shop::create($data);
         } else {
-            return Shop::findOrFail($shop_id)->update($data);
+            return $shop->update($data);
         }
     }
 
-    public function destroy($id) {
+    public function destroy(Shop $shop) {
 
-        return Shop::find($id)->delete();
+        return $shop->delete();
     }
 
-    public function getItemsInShop($id) {
-        $itemRepo = new ItemRepository();
+    public function getItemsInShop(Shop $shop) {
 
-        return $itemRepo->getItemsByShopId($id);
+        return $shop->items;
     }
 }

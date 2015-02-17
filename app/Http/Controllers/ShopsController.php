@@ -60,7 +60,7 @@ class ShopsController extends Controller
      * @return Response
      */
     public function show(Shop $shop) {
-        $items = $this->shop->getItemsInShop($shop->id);
+        $items = $this->shop->getItemsInShop($shop);
 
         return view('shops.show', compact('shop', 'items'));
     }
@@ -88,7 +88,7 @@ class ShopsController extends Controller
         $data = $request->all();
 
         $data = $this->purifier->clean($data);
-        $this->shop->createOrUpdate($data, $shop->id);
+        $this->shop->createOrUpdate($data, $shop);
 
         return redirect()->route('shops.show', $shop->id);
     }
@@ -101,7 +101,7 @@ class ShopsController extends Controller
      * @return Response
      */
     public function destroy(ShopsFormRequest $request, Shop $shop) {
-        $this->shop->destroy($shop->id);
+        $this->shop->destroy($shop);
 
         return redirect()->route('shops.index');
     }

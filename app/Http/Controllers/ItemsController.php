@@ -98,7 +98,7 @@ class ItemsController extends Controller {
 	{
 		$data = $request->all();
 		$data = $this->purifier->clean($data);
-		$this->item->createOrUpdate($data, $item->id);
+		$this->item->createOrUpdate($data, $item);
 
 		return redirect()->route('items.show', $item->id);
 	}
@@ -111,7 +111,7 @@ class ItemsController extends Controller {
      */
 	public function destroy(Item $item)
 	{
-		$this->item->destroy($item->id);
+		$this->item->destroy($item);
 
 		return redirect()->route('items.index');
 	}

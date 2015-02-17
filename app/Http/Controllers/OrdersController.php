@@ -53,14 +53,11 @@ class OrdersController extends Controller {
      */
 	public function store(OrdersFormRequest $request)
 	{
-        $data = $request->all();
-        $data = $this->purifier->clean($data);
-
-        $orderData = $data['orderData'];
-        $itemsId  = $data['itemsId'];
+        $orderData = $this->purifier->clean($request->all());
+        $items = $this->purifier($request->input('items_list'));
 
 		$order = $this->order->createOrUpdate($orderData);
-        $this->order->addItemsToOrder($order->id, $itemsId);
+        $this->order->updateItemsToOrder($order, $items);
 
         return redirect()->route('orders');
 	}
@@ -98,11 +95,13 @@ class OrdersController extends Controller {
      */
 	public function update(Order $order, OrdersFormRequest $request)
 	{
-		$data = $request->all();
-        $orderData = $this->purifier->clean($data);
-        $this->order->createOrUpdate($orderData, $order->id);
+        $data = $this->purifier->clean($request->all());
+        $items = $this->purifier($request->input('items_list'));
 
-        return redirect()->route('orders.show', $order->id);
+        $this->order->createOrUpdate($data, $order);
+        $this->order->updateItemsToOrder($order, $items);
+
+        return redirect()->route('orders');
 	}
 
     /**
@@ -119,10 +118,5 @@ class OrdersController extends Controller {
         return redirect()->route('orders.index');
 	}
 
-    public function removeItem(Order $order, OrdersFormRequest $request) {
-        $id = $this->purifier->clean($request->get('item_id'));
-
-        return $this->order->removeItemsFromOrder($order->id, $id);
-    }
 
 }

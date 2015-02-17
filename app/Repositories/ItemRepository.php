@@ -32,24 +32,21 @@ class ItemRepository implements  IItemRepository
         return $item;
     }
 
-    public function createOrUpdate($data, $id = null) {
-        if (is_null($id)) {
+    public function createOrUpdate($data, Item $item=null) {
+        if (is_null($item)) {
             return Item::create($data);
         } else {
-            $item = Item::findOrFail($id);
             return $item->update($data);
         }
     }
 
-    public function destroy($id) {
-        $item = Item::findOrFail($id);
-
+    public function destroy(Item $item) {
         return $item->delete();
     }
 
-    public function getItemsByShopId($id) {
-        $items = Item::where('shop_id', '=', $id)->get();
-
-        return $items;
-    }
+    //public function getItemsByShopId($id) {
+    //    $items = Item::where('shop_id', '=', $id)->get();
+    //
+    //    return $items;
+    //}
 }

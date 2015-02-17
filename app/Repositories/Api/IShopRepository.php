@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api;
 
+use App\Shop;
+
 interface IShopRepository
 {
     public function getPopularShops();
@@ -14,9 +16,9 @@ interface IShopRepository
 
     //public function getUserShopById($id);
 
-    public function getItemsInShop($id);
+    public function getItemsInShop(Shop $shop);
 
-    public function createOrUpdate($data, $shop_id=null);
+    public function createOrUpdate($data, Shop $shop=null);
 
-    public function destroy($id);
+    public function destroy(Shop $shop);
 }
